@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connexion — Reward Platform</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif}.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px}.box{width:100%;max-width:430px;border:1px solid #262626;background:#0b0b0b;border-radius:16px;padding:28px}.logo{text-align:center;font-size:22px;font-weight:700;margin-bottom:25px}.logo span{color:#a855f7}.tabs{display:flex;background:#151515;border-radius:10px;padding:4px;margin-bottom:22px}.tab{flex:1;padding:10px;border:0;background:none;color:#aaa;border-radius:8px;cursor:pointer}.tab.active{background:#292929;color:#fff}.form{display:none}.form.active{display:block}h2{margin:0 0 8px}p.sub{color:#888;margin:0 0 22px;font-size:14px}label{display:block;color:#bbb;font-size:13px;margin:14px 0 7px}input{width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#050505;color:#fff;outline:none}input:focus{border-color:#777}.submit{width:100%;margin-top:20px;padding:13px;border:0;border-radius:9px;background:#fff;color:#000;font-weight:700;cursor:pointer}.msg{min-height:20px;margin-top:15px;font-size:13px;color:#aaa}.back{text-align:center;margin-top:20px;color:#888;font-size:13px}.back a{color:#fff}
+
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:235px;background:#080808;border-right:1px solid #242424;padding:24px 14px;z-index:100}
+.side-logo{display:block;font-size:20px;font-weight:700;padding:0 12px 28px;text-decoration:none;color:#fff}.side-logo span{color:#a855f7}
+.side-links{display:flex;flex-direction:column;gap:6px}.side-links a,.side-logout{display:block;padding:12px 13px;border-radius:9px;color:#999;font-size:14px;text-decoration:none;border:1px solid transparent;background:transparent;cursor:pointer;text-align:left;width:100%}
+.side-links a:hover,.side-links a.active,.side-logout:hover{background:#151515;border-color:#292929;color:#fff}.side-bottom{position:absolute;bottom:20px;left:14px;right:14px}
+body{padding-left:235px}@media(max-width:700px){body{padding-left:0}.sidebar{position:relative;width:100%;height:auto;bottom:auto;border-right:0;border-bottom:1px solid #242424;padding:14px}.side-logo{padding:4px 8px 12px}.side-links{display:grid;grid-template-columns:repeat(2,1fr)}.side-bottom{position:static;margin-top:6px}}
+</style>
+</head>
+<body><aside class="sidebar"><a class="side-logo" href="/">Reward<span>Platform</span></a><nav class="side-links"><a class="" href="/">⌂ &nbsp; Accueil</a><a class="" href="/dashboard.html">▶ &nbsp; Missions</a><a class="" href="/withdraw.html">₣ &nbsp; Retrait</a><a class="active" href="/auth.html">⇥ &nbsp; Connexion</a></nav></aside>
+<div class="wrap"><div class="box">
+<div class="logo">Reward<span>Platform</span></div>
+<div class="tabs"><button class="tab active" onclick="showTab('login',this)">Connexion</button><button class="tab" onclick="showTab('register',this)">Inscription</button></div>
+
+<form id="login" class="form active">
+<h2>Bienvenue</h2><p class="sub">Connecte-toi à ton compte.</p>
+<label>Email</label><input id="loginEmail" type="email" required autocomplete="email">
+<label>Mot de passe</label><input id="loginPassword" type="password" required autocomplete="current-password">
+<button class="submit">Se connecter</button><div id="loginMsg" class="msg"></div>
+</form>
+
+<form id="register" class="form">
+<h2>Créer un compte</h2><p class="sub">Inscris-toi pour accéder aux missions.</p>
+<label>Nom</label><input id="regName" required maxlength="80">
+<label>Email</label><input id="regEmail" type="email" required autocomplete="email">
+<label>Mot de passe</label><input id="regPassword" type="password" required minlength="6" autocomplete="new-password">
+<button class="submit">Créer mon compte</button><div id="regMsg" class="msg"></div>
+</form>
+<div class="back"><a href="/">← Retour à l'accueil</a></div>
+</div></div>
+<script>
+function showTab(id,btn){document.querySelectorAll('.form').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active')}
+async function api(url,opt={}){const r=await fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(opt.headers||{})},...opt});let d={};try{d=await r.json()}catch{}if(!r.ok)throw new Error(d.error||d.message||'Une erreur est survenue.');return d}
+document.getElementById('login').onsubmit=async e=>{e.preventDefault();let m=document.getElementById('loginMsg');m.textContent='Connexion...';try{await api('/api/login',{method:'POST',body:JSON.stringify({email:loginEmail.value,password:loginPassword.value})});location.href='/dashboard.html'}catch(x){m.textContent=x.message}}
+document.getElementById('register').onsubmit=async e=>{e.preventDefault();let m=document.getElementById('regMsg');m.textContent='Création du compte...';try{await api('/api/register',{method:'POST',body:JSON.stringify({name:regName.value,email:regEmail.value,password:regPassword.value})});m.textContent='Compte créé. Connexion...';await api('/api/login',{method:'POST',body:JSON.stringify({email:regEmail.value,password:regPassword.value})});location.href='/dashboard.html'}catch(x){m.textContent=x.message}}
+</script>
+</body>
+</html>

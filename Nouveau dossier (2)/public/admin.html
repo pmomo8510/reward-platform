@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reward Platform — Administration</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at top right, #26345f 0, transparent 35%),
+                linear-gradient(135deg, #080c16, #111827);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(10,15,28,.94);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(12px);
+        }
+
+        header h1 {
+            font-size: 22px;
+        }
+
+        header span {
+            color: #818cf8;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            border: 0;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+
+        .dashboard-btn {
+            background: #334155;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+
+        .dashboard-btn:hover {
+            background: #475569;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        .container {
+            width: min(1250px, 94%);
+            margin: 30px auto;
+        }
+
+        .title {
+            margin-bottom: 25px;
+        }
+
+        .title h2 {
+            font-size: 28px;
+            margin-bottom: 7px;
+        }
+
+        .title p {
+            color: #94a3b8;
+        }
+
+        .demo {
+            margin-top: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: rgba(245,158,11,.08);
+            border: 1px solid rgba(245,158,11,.25);
+            color: #fbbf24;
+            font-size: 14px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(17,24,39,.9);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        .stat-value {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .green {
+            color: #4ade80;
+        }
+
+        .yellow {
+            color: #fbbf24;
+        }
+
+        .red {
+            color: #f87171;
+        }
+
+        .blue {
+            color: #818cf8;
+        }
+
+        .section {
+            background: rgba(17,24,39,.9);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .section h3 {
+            font-size: 20px;
+        }
+
+        .refresh {
+            background: #334155;
+            padding: 9px 13px;
+            border-radius: 8px;
+        }
+
+        .refresh:hover {
+            background: #475569;
+        }
+
+        .advanced-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .mini-card {
+            padding: 15px;
+            border-radius: 11px;
+            background: #111a2c;
+            border: 1px solid rgba(255,255,255,.06);
+        }
+
+        .mini-card small {
+            display: block;
+            color: #8793a8;
+            margin-bottom: 7px;
+        }
+
+        .mini-card strong {
+            font-size: 19px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,.07);
+            font-size: 14px;
+        }
+
+        th {
+            color: #94a3b8;
+            font-weight: bold;
+            background: rgba(255,255,255,.025);
+        }
+
+        td {
+            color: #dbe4f0;
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,.02);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-admin {
+            background: rgba(129,140,248,.13);
+            color: #a5b4fc;
+        }
+
+        .badge-user {
+            background: rgba(148,163,184,.12);
+            color: #cbd5e1;
+        }
+
+        .badge-active {
+            background: rgba(34,197,94,.12);
+            color: #4ade80;
+        }
+
+        .badge-inactive {
+            background: rgba(239,68,68,.12);
+            color: #f87171;
+        }
+
+        .status {
+            padding: 5px 8px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: rgba(245,158,11,.12);
+            color: #fbbf24;
+        }
+
+        .status-approved {
+            background: rgba(34,197,94,.12);
+            color: #4ade80;
+        }
+
+        .status-rejected {
+            background: rgba(239,68,68,.12);
+            color: #f87171;
+        }
+
+        .actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 7px 10px;
+            border-radius: 7px;
+            font-size: 12px;
+        }
+
+        .approve {
+            background: #16a34a;
+        }
+
+        .approve:hover {
+            background: #15803d;
+        }
+
+        .reject {
+            background: #dc2626;
+        }
+
+        .reject:hover {
+            background: #b91c1c;
+        }
+
+        .toggle {
+            background: #4f46e5;
+        }
+
+        .toggle:hover {
+            background: #4338ca;
+        }
+
+        .add-ad {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #6366f1;
+        }
+
+        .add-btn {
+            background: #6366f1;
+            padding: 11px 16px;
+            border-radius: 8px;
+        }
+
+        .add-btn:hover {
+            background: #4f46e5;
+        }
+
+        .message {
+            display: none;
+            padding: 11px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            display: block;
+            background: rgba(34,197,94,.1);
+            color: #86efac;
+            border: 1px solid rgba(34,197,94,.2);
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(239,68,68,.1);
+            color: #fca5a5;
+            border: 1px solid rgba(239,68,68,.2);
+        }
+
+        .empty {
+            text-align: center;
+            color: #7f8ba0;
+            padding: 20px;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .advanced-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .add-ad {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 14px;
+            }
+
+            header h1 {
+                font-size: 18px;
+            }
+
+            .header-buttons {
+                gap: 5px;
+            }
+
+            .dashboard-btn,
+            .logout-btn {
+                padding: 8px 9px;
+                font-size: 11px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .stats,
+            .advanced-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .add-ad {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>
+        Reward <span>Platform</span>
+    </h1>
+
+    <div class="header-buttons">
+
+        <button
+            class="dashboard-btn"
+            onclick="goDashboard()"
+        >
+            Tableau de bord
+        </button>
+
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+            Déconnexion
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="title">
+
+        <h2>⚙️ Administration</h2>
+
+        <p>
+            Gestion des utilisateurs, publicités, récompenses et retraits.
+        </p>
+
+
+
+    </div>
+
+
+    <!-- STATISTIQUES PRINCIPALES -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <div class="stat-label">Utilisateurs</div>
+            <div class="stat-value blue" id="usersCount">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Solde total</div>
+            <div class="stat-value green" id="totalBalance">0 F</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Retraits</div>
+            <div class="stat-value yellow" id="withdrawalsCount">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Retraits en attente</div>
+            <div class="stat-value red" id="pendingCount">0</div>
+        </div>
+
+    </section>
+
+
+    <!-- STATISTIQUES AVANCEES -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h3>📊 Statistiques avancées</h3>
+
+            <button
+                class="refresh"
+                onclick="refreshAll()"
+            >
+                ↻ Actualiser
+            </button>
+
+        </div>
+
+        <div class="advanced-grid">
+
+            <div class="mini-card">
+                <small>Publicités regardées</small>
+                <strong id="advancedAds">0</strong>
+            </div>
+
+            <div class="mini-card">
+                <small>Récompenses distribuées</small>
+                <strong class="green" id="advancedRewards">0 F</strong>
+            </div>
+
+            <div class="mini-card">
+                <small>Utilisateurs actifs</small>
+                <strong id="advancedActive">0</strong>
+            </div>
+
+            <div class="mini-card">
+                <small>Récompenses aujourd'hui</small>
+                <strong class="green" id="advancedToday">0 F</strong>
+            </div>
+
+            <div class="mini-card">
+                <small>Total des retraits</small>
+                <strong id="advancedWithdrawals">0 F</strong>
+            </div>
+
+            <div class="mini-card">
+                <small>Approuvés</small>
+                <strong class="green" id="advancedApproved">0 F</strong>
+            </div>
+
+            <div class="mini-card">
+                <small>En attente</small>
+                <strong class="yellow" id="advancedPending">0 F</strong>
+            </div>
+
+            <div class="mini-card">
+                <small>Refusés</small>
+                <strong class="red" id="advancedRejected">0 F</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- UTILISATEURS -->
+
+    <section class="section">
+
+        <div class="section-header">
+            <h3>👥 Utilisateurs</h3>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Solde</th>
+                        <th>Rôle</th>
+                        <th>Créé le</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="usersTable">
+
+                    <tr>
+                        <td colspan="6" class="empty">
+                            Chargement...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- PUBLICITES -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h3>📺 Gestion des publicités</h3>
+
+        </div>
+
+        <div id="adMessage" class="message"></div>
+
+        <form
+            class="add-ad"
+            id="addAdForm"
+        >
+
+            <input
+                id="adTitle"
+                type="text"
+                placeholder="Titre de la publicité"
+                required
+            >
+
+            <input
+                id="adDuration"
+                type="number"
+                min="1"
+                value="10"
+                placeholder="Durée"
+                required
+            >
+
+            <input
+                id="adReward"
+                type="number"
+                min="1"
+                value="500"
+                placeholder="500 F CFA"
+                readonly
+                required
+            >
+
+            <button
+                class="add-btn"
+                type="submit"
+            >
+                + Ajouter
+            </button>
+
+        </form>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Titre</th>
+                        <th>Durée</th>
+                        <th>Récompense</th>
+                        <th>Statut</th>
+                        <th>Référence</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="adsTable">
+
+                    <tr>
+                        <td colspan="6" class="empty">
+                            Chargement...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- RETRAITS -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h3>💸 Demandes de retrait</h3>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Utilisateur</th>
+                        <th>Montant</th>
+                        <th>Méthode</th>
+                        <th>Compte</th>
+                        <th>Statut</th>
+                        <th>Référence</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="withdrawalsTable">
+
+                    <tr>
+                        <td colspan="8" class="empty">
+                            Chargement...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- PUBLICITES REGARDEES -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h3>👁️ Publicités regardées</h3>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Utilisateur</th>
+                        <th>Publicité</th>
+                        <th>Récompense</th>
+                        <th>Date</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="viewsTable">
+
+                    <tr>
+                        <td colspan="5" class="empty">
+                            Chargement...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    Reward Platform © 2026 — Administration
+</footer>
+
+
+<script>
+
+const money = amount =>
+    Number(amount || 0).toLocaleString("fr-FR") + " F";
+
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+async function api(url, options = {}) {
+
+    const response = await fetch(url, {
+        credentials: "same-origin",
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+        }
+    });
+
+    let data = {};
+
+    try {
+        data = await response.json();
+    } catch {
+        data = {};
+    }
+
+    if (!response.ok) {
+
+        if (response.status === 401) {
+            window.location.href = "/";
+            return;
+        }
+
+        if (response.status === 403) {
+            throw new Error("Accès administrateur refusé.");
+        }
+
+        throw new Error(
+            data.error ||
+            data.message ||
+            "Une erreur est survenue."
+        );
+    }
+
+    return data;
+}
+
+
+/* =========================
+   ADMIN
+========================= */
+
+async function loadAdmin() {
+
+    try {
+
+        const data = await api("/api/admin");
+
+        const stats = data.stats || {};
+
+        document.getElementById("usersCount").textContent =
+            Number(stats.userCount || 0);
+
+        document.getElementById("totalBalance").textContent =
+            money(stats.totalBalance);
+
+        document.getElementById("withdrawalsCount").textContent =
+            Number(stats.withdrawalCount || 0);
+
+        document.getElementById("pendingCount").textContent =
+            Number((data.withdrawals || []).filter(item => item.status === "pending").length);
+
+        renderUsers(data.users || []);
+        renderWithdrawals(data.withdrawals || []);
+
+    } catch (error) {
+
+        alert(error.message);
+    }
+}
+
+
+/* =========================
+   UTILISATEURS
+========================= */
+
+function renderUsers(users) {
+
+    const table =
+        document.getElementById("usersTable");
+
+    if (!users.length) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty">
+                    Aucun utilisateur.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    table.innerHTML = users.map(user => `
+
+        <tr>
+
+            <td>${Number(user.id)}</td>
+
+            <td>
+                ${escapeHtml(user.name)}
+            </td>
+
+            <td>
+                ${escapeHtml(user.email)}
+            </td>
+
+            <td class="green">
+                ${money(user.balance)}
+            </td>
+
+            <td>
+
+                ${
+                    Number(user.is_admin)
+                    ?
+                    `<span class="badge badge-admin">ADMIN</span>`
+                    :
+                    `<span class="badge badge-user">USER</span>`
+                }
+
+            </td>
+
+            <td>
+                ${escapeHtml(user.created_at || "")}
+            </td>
+
+        </tr>
+
+    `).join("");
+}
+
+
+/* =========================
+   RETRAITS
+========================= */
+
+function renderWithdrawals(withdrawals) {
+
+    const table =
+        document.getElementById("withdrawalsTable");
+
+    if (!withdrawals.length) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty">
+                    Aucun retrait.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    table.innerHTML = withdrawals.map(item => {
+
+        const status =
+            String(item.status || "pending").toLowerCase();
+
+        let statusText = "En attente";
+        let statusClass = "status-pending";
+
+        if (status === "approved") {
+            statusText = "Paiement confirmé";
+            statusClass = "status-approved";
+        }
+
+        if (status === "rejected") {
+            statusText = "Refusé";
+            statusClass = "status-rejected";
+        }
+
+        return `
+
+            <tr>
+
+                <td>${Number(item.id)}</td>
+
+                <td>
+                    ${escapeHtml(item.user_name || "Utilisateur")}
+                    <br>
+                    <small style="color:#64748b;">
+                        ${escapeHtml(item.user_email || "")}
+                    </small>
+                </td>
+
+                <td class="green">
+                    ${money(item.amount)}
+                </td>
+
+                <td>
+                    ${escapeHtml(item.method)}
+                </td>
+
+                <td>
+                    ${escapeHtml(item.account)}
+                </td>
+
+                <td>
+                    <span class="status ${statusClass}">
+                        ${statusText}
+                    </span>
+                </td>
+
+                <td>
+                    ${escapeHtml(item.payment_reference || "—")}
+                </td>
+
+                <td>
+
+                    ${
+                        status === "pending"
+                        ?
+                        `
+                        <div class="actions">
+
+                            <button
+                                class="btn approve"
+                                onclick="confirmManualPayment(${Number(item.id)}, ${JSON.stringify(item.amount)}, ${JSON.stringify(item.method)}, ${JSON.stringify(item.account)})"
+                            >
+                                ✓ Confirmer le paiement
+                            </button>
+
+                            <button
+                                class="btn reject"
+                                onclick="updateWithdrawal(${Number(item.id)}, 'rejected')"
+                            >
+                                ✕ Refuser
+                            </button>
+
+                        </div>
+                        `
+                        :
+                        `<span style="color:#64748b;">Traité</span>`
+                    }
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }).join("");
+}
+
+
+async function confirmManualPayment(id, amount, method, account) {
+    const reference = prompt(
+        `Paiement manuel de ${money(amount)} via ${method}.\n\nCompte : ${account}\n\nEntrez la référence de transaction, reçu ou preuve de paiement :`
+    );
+
+    if (reference === null) return;
+
+    const cleanReference = reference.trim();
+    if (!cleanReference) {
+        alert("La référence du paiement est obligatoire.");
+        return;
+    }
+
+    if (!confirm("Confirmer que le paiement a réellement été envoyé au bénéficiaire ?")) {
+        return;
+    }
+
+    try {
+        await api(`/api/admin/withdrawals/${id}`, {
+            method: "POST",
+            body: JSON.stringify({
+                status: "approved",
+                paymentReference: cleanReference
+            })
+        });
+
+        await loadAdmin();
+        await loadAdvancedStats();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function updateWithdrawal(id, status) {
+    if (status !== "rejected") return;
+    if (!confirm("Refuser ce retrait et recréditer le montant à l'utilisateur ?")) return;
+    try {
+        await api(`/api/admin/withdrawals/${id}`, {
+            method: "POST",
+            body: JSON.stringify({ status: "rejected" })
+        });
+        await loadAdmin();
+        await loadAdvancedStats();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+
+/* =========================
+   PUBLICITES
+========================= */
+
+async function loadAds() {
+
+    const table =
+        document.getElementById("adsTable");
+
+    try {
+
+        const data =
+            await api("/api/admin/ads");
+
+        const ads =
+            data.ads || [];
+
+        if (!ads.length) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty">
+                        Aucune publicité.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        table.innerHTML = ads.map(ad => `
+
+            <tr>
+
+                <td>
+                    ${Number(ad.id)}
+                </td>
+
+                <td>
+                    ${escapeHtml(ad.title)}
+                </td>
+
+                <td>
+                    ${Number(ad.duration)} s
+                </td>
+
+                <td class="green">
+                    +${money(ad.reward)}
+                </td>
+
+                <td>
+
+                    ${
+                        Number(ad.active)
+                        ?
+                        `<span class="badge badge-active">ACTIVE</span>`
+                        :
+                        `<span class="badge badge-inactive">INACTIVE</span>`
+                    }
+
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn toggle"
+                        onclick="toggleAd(${Number(ad.id)})"
+                    >
+                        ${Number(ad.active) ? "Désactiver" : "Activer"}
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+
+    } catch (error) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty">
+                    ${escapeHtml(error.message)}
+                </td>
+            </tr>
+        `;
+    }
+}
+
+
+document
+    .getElementById("addAdForm")
+    .addEventListener("submit", async event => {
+
+        event.preventDefault();
+
+        const title =
+            document.getElementById("adTitle").value.trim();
+
+        const duration =
+            Number(document.getElementById("adDuration").value);
+
+        const reward =
+            Number(document.getElementById("adReward").value);
+
+        const message =
+            document.getElementById("adMessage");
+
+        message.className = "message";
+        message.textContent = "";
+
+        if (!title || duration <= 0 || reward <= 0) {
+
+            message.textContent =
+                "Veuillez saisir des valeurs valides.";
+
+            message.className = "message error";
+
+            return;
+        }
+
+        try {
+
+            await api("/api/admin/ads", {
+                method: "POST",
+                body: JSON.stringify({
+                    title,
+                    duration,
+                    reward
+                })
+            });
+
+            message.textContent =
+                "✅ Publicité ajoutée.";
+
+            message.className = "message success";
+
+            document.getElementById("addAdForm").reset();
+
+            document.getElementById("adDuration").value = 10;
+            document.getElementById("adReward").value = 500;
+
+            await loadAds();
+
+        } catch (error) {
+
+            message.textContent =
+                "❌ " + error.message;
+
+            message.className = "message error";
+        }
+
+    });
+
+
+async function toggleAd(id) {
+
+    try {
+
+        await api(`/api/admin/ads/${id}/toggle`, {
+            method: "POST"
+        });
+
+        await loadAds();
+
+    } catch (error) {
+
+        alert(error.message);
+    }
+}
+
+
+/* =========================
+   PUBLICITES REGARDEES
+========================= */
+
+async function loadAdViews() {
+
+    const table =
+        document.getElementById("viewsTable");
+
+    try {
+
+        const data =
+            await api("/api/admin/ad-views");
+
+        const views =
+            data.views || [];
+
+        if (!views.length) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty">
+                        Aucune publicité regardée.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        table.innerHTML = views.map(view => `
+
+            <tr>
+
+                <td>
+                    ${Number(view.id)}
+                </td>
+
+                <td>
+                    ${escapeHtml(view.user_name || "Utilisateur")}
+                    <br>
+                    <small style="color:#64748b;">
+                        ${escapeHtml(view.user_email || "")}
+                    </small>
+                </td>
+
+                <td>
+                    ${escapeHtml(view.ad_title || "")}
+                </td>
+
+                <td class="green">
+                    +${money(view.reward)}
+                </td>
+
+                <td>
+                    ${escapeHtml(view.viewed_at || "")}
+                </td>
+
+            </tr>
+
+        `).join("");
+
+    } catch (error) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty">
+                    ${escapeHtml(error.message)}
+                </td>
+            </tr>
+        `;
+    }
+}
+
+
+/* =========================
+   STATISTIQUES AVANCEES
+========================= */
+
+async function loadAdvancedStats() {
+
+    try {
+
+        const data =
+            await api("/api/admin/stats");
+
+        document.getElementById("advancedAds").textContent =
+            Number(data.adsWatched || 0);
+
+        document.getElementById("advancedRewards").textContent =
+            money(data.totalRewards);
+
+        document.getElementById("advancedActive").textContent =
+            Number(data.activeUsers || 0);
+
+        document.getElementById("advancedToday").textContent =
+            money(data.todayRewards);
+
+        document.getElementById("advancedWithdrawals").textContent =
+            money(data.totalWithdrawals);
+
+        document.getElementById("advancedApproved").textContent =
+            money(data.approvedWithdrawals && data.approvedWithdrawals.total);
+
+        document.getElementById("advancedPending").textContent =
+            money(data.pendingWithdrawals && data.pendingWithdrawals.total);
+
+        document.getElementById("advancedRejected").textContent =
+            money(data.rejectedWithdrawals && data.rejectedWithdrawals.total);
+
+    } catch (error) {
+
+        console.error(
+            "Erreur statistiques :",
+            error
+        );
+    }
+}
+
+
+/* =========================
+   ACTUALISER
+========================= */
+
+async function refreshAll() {
+
+    await Promise.all([
+        loadAdmin(),
+        loadAds(),
+        loadAdViews(),
+        loadAdvancedStats()
+    ]);
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function goDashboard() {
+
+    window.location.href =
+        "/dashboard.html";
+}
+
+
+async function logout() {
+
+    try {
+
+        await api("/api/logout", {
+            method: "POST"
+        });
+
+    } catch (error) {
+        // Retour à la connexion même si la requête échoue.
+    }
+
+    window.location.href = "/";
+}
+
+
+/* =========================
+   DEMARRAGE
+========================= */
+
+refreshAll();
+
+</script>
+
+</body>
+</html>
