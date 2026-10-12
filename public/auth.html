@@ -4,13 +4,260 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Connexion — Reward Platform</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif}.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px}.box{width:100%;max-width:430px;border:1px solid #262626;background:#0b0b0b;border-radius:16px;padding:28px}.logo{text-align:center;font-size:22px;font-weight:700;margin-bottom:25px}.logo span{color:#a855f7}.tabs{display:flex;background:#151515;border-radius:10px;padding:4px;margin-bottom:22px}.tab{flex:1;padding:10px;border:0;background:none;color:#aaa;border-radius:8px;cursor:pointer}.tab.active{background:#292929;color:#fff}.form{display:none}.form.active{display:block}h2{margin:0 0 8px}p.sub{color:#888;margin:0 0 22px;font-size:14px}label{display:block;color:#bbb;font-size:13px;margin:14px 0 7px}input{width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#050505;color:#fff;outline:none}input:focus{border-color:#777}.submit{width:100%;margin-top:20px;padding:13px;border:0;border-radius:9px;background:#fff;color:#000;font-weight:700;cursor:pointer}.msg{min-height:20px;margin-top:15px;font-size:13px;color:#aaa}.back{text-align:center;margin-top:20px;color:#888;font-size:13px}.back a{color:#fff}
+*{box-sizing:border-box}
 
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:235px;background:#080808;border-right:1px solid #242424;padding:24px 14px;z-index:100}
-.side-logo{display:block;font-size:20px;font-weight:700;padding:0 12px 28px;text-decoration:none;color:#fff}.side-logo span{color:#a855f7}
-.side-links{display:flex;flex-direction:column;gap:6px}.side-links a,.side-logout{display:block;padding:12px 13px;border-radius:9px;color:#999;font-size:14px;text-decoration:none;border:1px solid transparent;background:transparent;cursor:pointer;text-align:left;width:100%}
-.side-links a:hover,.side-links a.active,.side-logout:hover{background:#151515;border-color:#292929;color:#fff}.side-bottom{position:absolute;bottom:20px;left:14px;right:14px}
-body{padding-left:235px}@media(max-width:700px){body{padding-left:0}.sidebar{position:relative;width:100%;height:auto;bottom:auto;border-right:0;border-bottom:1px solid #242424;padding:14px}.side-logo{padding:4px 8px 12px}.side-links{display:grid;grid-template-columns:repeat(2,1fr)}.side-bottom{position:static;margin-top:6px}}
+:root{
+  --bg:#080f20;
+  --panel:#111c30;
+  --panel-light:#16233a;
+  --border:#26344d;
+  --text:#f8fafc;
+  --muted:#91a7c7;
+  --green:#10b981;
+  --green-dark:#07865f;
+  --purple:#6366f1;
+}
+
+html{min-height:100%;background:var(--bg)}
+
+body{
+  margin:0;
+  background:radial-gradient(ellipse at top,#12243b 0%,var(--bg) 65%);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  min-height:100vh;
+}
+
+.wrap{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px;
+}
+
+.box{
+  width:100%;
+  max-width:430px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  border-radius:22px;
+  padding:30px;
+  box-shadow:0 20px 55px rgba(0,0,0,.24);
+}
+
+.logo{
+  text-align:center;
+  font-size:27px;
+  font-weight:800;
+  letter-spacing:-.7px;
+  margin-bottom:28px;
+}
+
+.logo span,.side-logo span{color:#818cf8}
+
+.tabs{
+  display:flex;
+  gap:4px;
+  background:#1a263b;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:5px;
+  margin-bottom:26px;
+}
+
+.tab{
+  flex:1;
+  padding:12px 8px;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  border-radius:9px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .2s,color .2s;
+}
+
+.tab.active{
+  background:var(--green);
+  color:white;
+  box-shadow:0 4px 12px rgba(16,185,129,.18);
+}
+
+.form{display:none}
+.form.active{display:block}
+
+h2{
+  margin:0 0 9px;
+  font-size:25px;
+  letter-spacing:-.5px;
+}
+
+p.sub{
+  color:var(--muted);
+  line-height:1.6;
+  margin:0 0 24px;
+  font-size:14px;
+}
+
+label{
+  display:block;
+  color:#c5d1e5;
+  font-size:13px;
+  font-weight:600;
+  margin:16px 0 8px;
+}
+
+input{
+  display:block;
+  width:100%;
+  min-width:0;
+  padding:14px;
+  border-radius:11px;
+  border:1px solid #30415d;
+  background:#0b1528;
+  color:var(--text);
+  font:inherit;
+  font-size:14px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+
+input:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(16,185,129,.12);
+}
+
+input::placeholder{color:#7185a5}
+
+.submit{
+  display:block;
+  width:100%;
+  margin-top:24px;
+  padding:15px;
+  border:0;
+  border-radius:11px;
+  background:linear-gradient(110deg,var(--green),var(--green-dark));
+  color:white;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 7px 18px rgba(16,185,129,.14);
+  transition:filter .2s,transform .2s;
+}
+
+.submit:hover{filter:brightness(1.08)}
+.submit:active{transform:scale(.99)}
+
+.msg{
+  min-height:20px;
+  margin-top:15px;
+  font-size:13px;
+  color:#a9bbd5;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
+.back{
+  text-align:center;
+  margin-top:24px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.back a{
+  color:#a5b4fc;
+  text-decoration:none;
+}
+
+.back a:hover{color:white;text-decoration:underline}
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:235px;
+  background:#0a1222;
+  border-right:1px solid var(--border);
+  padding:24px 14px;
+  z-index:100;
+}
+
+.side-logo{
+  display:block;
+  font-size:20px;
+  font-weight:800;
+  padding:0 12px 28px;
+  text-decoration:none;
+  color:white;
+  letter-spacing:-.5px;
+}
+
+.side-links{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.side-links a,.side-logout{
+  display:block;
+  padding:12px 13px;
+  border-radius:10px;
+  color:#9aabc5;
+  font-size:14px;
+  text-decoration:none;
+  border:1px solid transparent;
+  background:transparent;
+  cursor:pointer;
+  text-align:left;
+  width:100%;
+  transition:background .2s,color .2s;
+}
+
+.side-links a:hover,.side-links a.active,.side-logout:hover{
+  background:#17243a;
+  border-color:#293b57;
+  color:white;
+}
+
+.side-links a.active{
+  border-left:3px solid var(--green);
+}
+
+.side-bottom{
+  position:absolute;
+  bottom:20px;
+  left:14px;
+  right:14px;
+}
+
+body{padding-left:235px}
+
+@media(max-width:700px){
+  body{padding-left:0}
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+    bottom:auto;
+    border-right:0;
+    border-bottom:1px solid var(--border);
+    padding:14px;
+  }
+  .side-logo{padding:4px 8px 14px}
+  .side-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .side-bottom{position:static;margin-top:6px}
+  .wrap{min-height:auto;padding:28px 16px 36px}
+  .box{max-width:460px;padding:24px 20px;border-radius:18px}
+  .logo{font-size:25px;margin-bottom:24px}
+}
+
+@media(max-width:360px){
+  .box{padding:20px 16px}
+  h2{font-size:22px}
+  .tab{font-size:13px}
+}
 </style>
 </head>
 <body><aside class="sidebar"><a class="side-logo" href="/">Reward<span>Platform</span></a><nav class="side-links"><a class="" href="/">⌂ &nbsp; Accueil</a><a class="" href="/dashboard.html">▶ &nbsp; Missions</a><a class="" href="/withdraw.html">₣ &nbsp; Retrait</a><a class="active" href="/auth.html">⇥ &nbsp; Connexion</a></nav></aside>
