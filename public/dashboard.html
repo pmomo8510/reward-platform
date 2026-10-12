@@ -7,13 +7,14 @@
     <title>Reward Platform — Tableau de bord</title>
 
     <style>
-      *{box-sizing:border-box}
+     
+*{box-sizing:border-box}
 
 :root{
   --bg:#071321;
   --panel:#0b1d30;
-  --panel-light:#10263a;
-  --border:#173b52;
+  --panel2:#10263a;
+  --border:#1b3b52;
   --text:#f4f8ff;
   --muted:#9bb8d0;
   --green:#10b981;
@@ -25,130 +26,414 @@ html{min-height:100%;background:var(--bg)}
 
 body{
   margin:0;
+  min-height:100vh;
   background:
-    radial-gradient(ellipse at 65% 0%,rgba(0,140,100,.20),transparent 45%),
-    linear-gradient(135deg,#071321,#031c28 65%,#071321);
+    radial-gradient(ellipse at 65% 0%,rgba(0,160,110,.19),transparent 48%),
+    linear-gradient(135deg,#071321,#06212b 60%,#071321);
   color:var(--text);
   font-family:Arial,Helvetica,sans-serif;
+  font-size:14px;
 }
 
-a{color:#a5b4fc}
-
-button,input,select,textarea{font:inherit}
-
-button{cursor:pointer}
-
-header,.header,.topbar{
-  background:rgba(5,17,31,.92);
+header{
+  min-height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:16px 5%;
+  background:rgba(5,17,31,.88);
   border-bottom:1px solid var(--border);
 }
 
-.card,.stat-card,.stat,.panel,.section,.ad-card,
-.withdraw-card,.history-card,.progress-card{
-  background:linear-gradient(145deg,rgba(15,37,57,.96),rgba(7,26,43,.96));
-  border:1px solid var(--border);
-  border-radius:16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.12);
+header h1{
+  margin:0;
+  font-size:25px;
+  letter-spacing:-.6px;
 }
 
-h1,h2,h3,h4{color:var(--text)}
+header h1 span{color:#818cf8}
 
-p,.muted,.subtitle{color:var(--muted)}
+.logout{
+  padding:11px 16px;
+  border:1px solid #733647;
+  border-radius:10px;
+  background:#251b2b;
+  color:#ffb4c0;
+  font-weight:700;
+  cursor:pointer;
+}
 
-input,select,textarea{
-  background:#091a2b;
+.logout:hover{background:#39202d}
+
+.container{
+  width:min(1200px,92%);
+  margin:32px auto;
+}
+
+.welcome{
+  margin-bottom:26px;
+}
+
+.welcome h2{
+  margin:0 0 10px;
+  font-size:30px;
+  letter-spacing:-.7px;
+}
+
+.welcome h2 span{color:var(--green)}
+
+.welcome p{
+  margin:0;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.6;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.card{
+  min-width:0;
+  padding:20px;
+  background:linear-gradient(145deg,rgba(15,37,57,.97),rgba(7,26,43,.97));
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:0 8px 24px rgba(0,0,0,.13);
+}
+
+.stat-label{
+  margin-bottom:12px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.stat-value{
+  font-size:25px;
+  line-height:1.3;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+
+.stat-value.money{color:var(--green)}
+
+.progress-card{
+  margin-bottom:30px;
+  padding:20px 22px;
+}
+
+.progress-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+  font-weight:600;
+}
+
+#progressText{
+  color:var(--green);
+  text-align:right;
+}
+
+.progress{
+  width:100%;
+  height:11px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#20334a;
+}
+
+.progress-bar{
+  width:0;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--purple),var(--green));
+  transition:width .3s ease;
+}
+
+.section-title{
+  margin:0 0 18px;
+  font-size:21px;
+  letter-spacing:-.3px;
+}
+
+.refresh{
+  display:block;
+  margin:0 0 16px auto;
+  padding:10px 14px;
+  border:1px solid #29445e;
+  border-radius:10px;
+  background:#14263e;
   color:var(--text);
+  font-weight:600;
+  cursor:pointer;
+}
+
+.refresh:hover{border-color:var(--green)}
+
+.ads-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:30px;
+}
+
+.ad-card{
+  min-width:0;
+  padding:20px;
+  border:1px solid #1c4a5b;
+  border-radius:15px;
+  background:linear-gradient(145deg,#0d263b,#091b2d);
+  transition:transform .2s,border-color .2s;
+}
+
+.ad-card:hover{
+  transform:translateY(-2px);
+  border-color:#168c79;
+}
+
+.ad-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:48px;
+  height:48px;
+  margin-bottom:14px;
+  border:1px solid #284a70;
+  border-radius:13px;
+  background:#172d4c;
+  font-size:23px;
+}
+
+.ad-card h3{
+  margin:0 0 16px;
+  font-size:17px;
+  overflow-wrap:anywhere;
+}
+
+.ad-info{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:18px;
+}
+
+.badge{
+  display:inline-block;
+  padding:7px 9px;
+  border:1px solid #293f59;
+  border-radius:8px;
+  background:#172b43;
+  color:#c9d9eb;
+  font-size:12px;
+}
+
+.badge.reward{
+  color:#6ee7b7;
+  background:rgba(16,185,129,.10);
+  border-color:rgba(16,185,129,.25);
+}
+
+.watch-btn{
+  width:100%;
+  padding:13px 16px;
+  border:0;
+  border-radius:10px;
+  background:linear-gradient(110deg,var(--purple),#4f46e5);
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+  transition:filter .2s;
+}
+
+.watch-btn:hover{filter:brightness(1.12)}
+
+.watch-btn:disabled{
+  cursor:not-allowed;
+  opacity:.65;
+}
+
+.countdown{
+  display:none;
+  margin-top:12px;
+  color:#6ee7b7;
+  font-size:13px;
+  line-height:1.6;
+  overflow-wrap:anywhere;
+}
+
+.bottom-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;
+  gap:20px;
+}
+
+.bottom-grid>.card{min-width:0}
+
+.bottom-grid .section-title{font-size:20px}
+
+.form-group{margin-bottom:17px}
+
+.form-group label{
+  display:block;
+  margin-bottom:8px;
+  color:#c9d8e9;
+  font-size:13px;
+  font-weight:600;
+}
+
+.form-group input,
+.form-group select{
+  display:block;
+  width:100%;
+  min-width:0;
+  min-height:44px;
+  padding:12px 13px;
   border:1px solid #29465e;
   border-radius:10px;
-  padding:12px 14px;
+  background:#091a2b;
+  color:var(--text);
   outline:none;
 }
 
-input:focus,select:focus,textarea:focus{
+.form-group input:focus,
+.form-group select:focus{
   border-color:var(--green);
   box-shadow:0 0 0 3px rgba(16,185,129,.12);
 }
 
-input::placeholder,textarea::placeholder{color:#7995af}
+.form-group input::placeholder{color:#7995af}
 
-button.primary,.primary-button,.btn-primary,
-button[type="submit"],.watch-btn{
-  background:linear-gradient(110deg,var(--green),var(--green-dark));
-  color:white;
+.submit-btn{
+  width:100%;
+  padding:14px 16px;
   border:0;
   border-radius:10px;
-  padding:12px 16px;
+  background:linear-gradient(110deg,var(--green),var(--green-dark));
+  color:white;
   font-weight:700;
-  transition:filter .2s,transform .2s;
+  cursor:pointer;
 }
 
-button.primary:hover,.primary-button:hover,.btn-primary:hover,
-button[type="submit"]:hover,.watch-btn:hover{
-  filter:brightness(1.08);
+.submit-btn:hover{filter:brightness(1.08)}
+
+.submit-btn:disabled{opacity:.65;cursor:not-allowed}
+
+.message{
+  margin-top:14px;
+  font-size:13px;
+  line-height:1.6;
+  overflow-wrap:anywhere;
 }
 
-button.secondary,.btn-secondary{
-  background:#14263e;
-  color:var(--text);
-  border:1px solid #2a405e;
-  border-radius:10px;
-  padding:10px 14px;
-}
+.message.success{color:#6ee7b7}
+.message.error{color:#fda4af}
 
-.badge,.tag{
-  background:#182b43;
-  color:#d6e4f5;
-  border:1px solid #2a405e;
-  border-radius:8px;
-  padding:5px 9px;
-}
-
-.progress,.progress-bar-container{
-  background:#20334a;
-  border-radius:999px;
-  overflow:hidden;
-}
-
-.progress-bar,.progress-fill{
-  background:linear-gradient(90deg,#6366f1,#10b981);
-  border-radius:999px;
-}
-
-table{width:100%;border-collapse:collapse}
-
-th{
-  background:#0c2135;
-  color:#a9c6df;
-  font-weight:600;
-  text-align:left;
-}
-
-th,td{
-  padding:12px 10px;
+.history-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 0;
   border-bottom:1px solid #1b354c;
 }
 
-td{color:#e2edf8}
+.history-item:last-child{border-bottom:0}
 
-tr:hover td{background:rgba(16,185,129,.035)}
-
-.sidebar{
-  background:#061321;
-  border-right:1px solid var(--border);
+.history-main{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
 }
 
-.sidebar a{color:var(--muted)}
-
-.sidebar a:hover,.sidebar a.active{
-  background:rgba(16,185,129,.12);
-  color:#fff;
-  border-color:rgba(16,185,129,.3);
+.history-main strong{
+  color:var(--green);
+  font-size:16px;
 }
 
-@media(max-width:768px){
-  .container,.main-content,.content{width:100%;max-width:100%}
-  .card,.stat-card,.panel{border-radius:13px}
-  table{display:block;overflow-x:auto;white-space:nowrap}
+.history-main small{
+  color:var(--muted);
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
+.status{
+  flex-shrink:0;
+  padding:6px 9px;
+  border:1px solid #334155;
+  border-radius:8px;
+  background:#172b43;
+  color:#dbeafe;
+  font-size:12px;
+}
+
+.status.pending{
+  color:#fcd34d;
+  border-color:#69551d;
+  background:#332b18;
+}
+
+.status.approved{
+  color:#6ee7b7;
+  border-color:#176b54;
+  background:#10372f;
+}
+
+.status.rejected{
+  color:#fda4af;
+  border-color:#773747;
+  background:#3a202b;
+}
+
+.empty{
+  padding:18px;
+  border:1px dashed #29465e;
+  border-radius:12px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+footer{
+  padding:22px 15px;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  text-align:center;
+  font-size:12px;
+}
+
+button,input,select{font-family:inherit}
+
+@media(max-width:900px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ads-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bottom-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:560px){
+  header{padding:15px 4%;gap:10px}
+  header h1{font-size:21px}
+  .logout{padding:9px 11px;font-size:12px}
+  .container{width:92%;margin:24px auto}
+  .welcome h2{font-size:25px}
+  .stats{gap:10px}
+  .stats .card{padding:14px}
+  .stat-label{font-size:12px}
+  .stat-value{font-size:21px}
+  .progress-card{padding:16px}
+  .progress-top{align-items:flex-start;flex-direction:column}
+  #progressText{text-align:left}
+  .ads-grid{grid-template-columns:1fr}
+  .ad-card{padding:17px}
+  .bottom-grid{gap:15px}
+  .bottom-grid>.card{padding:17px}
+  .history-item{align-items:flex-start}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -157,6 +442,7 @@ tr:hover td{background:rgba(16,185,129,.035)}
     transition:none!important;
   }
 }
+
     </style>
 </head>
 
