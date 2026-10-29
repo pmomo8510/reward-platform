@@ -1,1134 +1,447 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071321">
+<title>Reward Platform — Tableau de bord</title>
 
-    <title>Reward Platform — Tableau de bord</title>
-
-    <style>
-     
+<style>
 *{box-sizing:border-box}
-
 :root{
-  --bg:#071321;
-  --panel:#0b1d30;
-  --panel2:#10263a;
-  --border:#1b3b52;
-  --text:#f4f8ff;
-  --muted:#9bb8d0;
-  --green:#10b981;
-  --green-dark:#07865f;
-  --purple:#6366f1;
+  --bg:#071321;--panel:#0b1d30;--panel2:#10263a;
+  --border:#1b3b52;--text:#f4f8ff;--muted:#9bb8d0;
+  --green:#10b981;--purple:#6366f1
 }
-
 html{min-height:100%;background:var(--bg)}
-
 body{
-  margin:0;
-  min-height:100vh;
-  background:
-    radial-gradient(ellipse at 65% 0%,rgba(0,160,110,.19),transparent 48%),
-    linear-gradient(135deg,#071321,#06212b 60%,#071321);
-  color:var(--text);
-  font-family:Arial,Helvetica,sans-serif;
-  font-size:14px;
+  margin:0;min-height:100vh;color:var(--text);
+  background:radial-gradient(ellipse at 65% 0%,rgba(0,160,110,.19),transparent 48%),
+  linear-gradient(135deg,#071321,#06212b 60%,#071321);
+  font:14px Arial,Helvetica,sans-serif
 }
-
 header{
-  min-height:76px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  padding:16px 5%;
-  background:rgba(5,17,31,.88);
-  border-bottom:1px solid var(--border);
+  min-height:76px;display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:16px 5%;background:rgba(5,17,31,.88);
+  border-bottom:1px solid var(--border)
 }
-
-header h1{
-  margin:0;
-  font-size:25px;
-  letter-spacing:-.6px;
-}
-
+header h1{margin:0;font-size:25px;letter-spacing:-.6px}
 header h1 span{color:#818cf8}
-
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.6;cursor:not-allowed}
 .logout{
-  padding:11px 16px;
-  border:1px solid #733647;
-  border-radius:10px;
-  background:#251b2b;
-  color:#ffb4c0;
-  font-weight:700;
-  cursor:pointer;
+  padding:11px 16px;border:1px solid #733647;border-radius:10px;
+  background:#251b2b;color:#ffb4c0;font-weight:700
 }
-
-.logout:hover{background:#39202d}
-
-.container{
-  width:min(1200px,92%);
-  margin:32px auto;
-}
-
-.welcome{
-  margin-bottom:26px;
-}
-
-.welcome h2{
-  margin:0 0 10px;
-  font-size:30px;
-  letter-spacing:-.7px;
-}
-
+.container{width:min(1200px,92%);margin:32px auto}
+.welcome{margin-bottom:26px}
+.welcome h2{margin:0 0 10px;font-size:30px;letter-spacing:-.7px}
 .welcome h2 span{color:var(--green)}
-
-.welcome p{
-  margin:0;
-  color:var(--muted);
-  font-size:15px;
-  line-height:1.6;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:16px;
-  margin-bottom:20px;
-}
-
+.welcome p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:20px}
 .card{
-  min-width:0;
-  padding:20px;
-  background:linear-gradient(145deg,rgba(15,37,57,.97),rgba(7,26,43,.97));
-  border:1px solid var(--border);
-  border-radius:16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.13);
+  min-width:0;padding:20px;background:linear-gradient(145deg,rgba(15,37,57,.97),rgba(7,26,43,.97));
+  border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 24px #0002
 }
-
-.stat-label{
-  margin-bottom:12px;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.stat-value{
-  font-size:25px;
-  line-height:1.3;
-  font-weight:800;
-  overflow-wrap:anywhere;
-}
-
-.stat-value.money{color:var(--green)}
-
-.progress-card{
-  margin-bottom:30px;
-  padding:20px 22px;
-}
-
-.progress-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:14px;
-  font-weight:600;
-}
-
-#progressText{
-  color:var(--green);
-  text-align:right;
-}
-
-.progress{
-  width:100%;
-  height:11px;
-  overflow:hidden;
-  border-radius:999px;
-  background:#20334a;
-}
-
-.progress-bar{
-  width:0;
-  height:100%;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--purple),var(--green));
-  transition:width .3s ease;
-}
-
-.section-title{
-  margin:0 0 18px;
-  font-size:21px;
-  letter-spacing:-.3px;
-}
-
-.refresh{
-  display:block;
-  margin:0 0 16px auto;
-  padding:10px 14px;
-  border:1px solid #29445e;
-  border-radius:10px;
-  background:#14263e;
-  color:var(--text);
-  font-weight:600;
-  cursor:pointer;
-}
-
-.refresh:hover{border-color:var(--green)}
-
-.ads-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:16px;
-  margin-bottom:30px;
-}
-
-.ad-card{
-  min-width:0;
-  padding:20px;
-  border:1px solid #1c4a5b;
-  border-radius:15px;
-  background:linear-gradient(145deg,#0d263b,#091b2d);
-  transition:transform .2s,border-color .2s;
-}
-
-.ad-card:hover{
-  transform:translateY(-2px);
-  border-color:#168c79;
-}
-
-.ad-icon{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:48px;
-  height:48px;
-  margin-bottom:14px;
-  border:1px solid #284a70;
-  border-radius:13px;
-  background:#172d4c;
-  font-size:23px;
-}
-
-.ad-card h3{
-  margin:0 0 16px;
-  font-size:17px;
-  overflow-wrap:anywhere;
-}
-
-.ad-info{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:18px;
-}
-
-.badge{
-  display:inline-block;
-  padding:7px 9px;
-  border:1px solid #293f59;
-  border-radius:8px;
-  background:#172b43;
-  color:#c9d9eb;
-  font-size:12px;
-}
-
-.badge.reward{
-  color:#6ee7b7;
-  background:rgba(16,185,129,.10);
-  border-color:rgba(16,185,129,.25);
-}
-
-.watch-btn{
-  width:100%;
-  padding:13px 16px;
-  border:0;
-  border-radius:10px;
-  background:linear-gradient(110deg,var(--purple),#4f46e5);
-  color:white;
-  font-weight:700;
-  cursor:pointer;
-  transition:filter .2s;
-}
-
-.watch-btn:hover{filter:brightness(1.12)}
-
-.watch-btn:disabled{
-  cursor:not-allowed;
-  opacity:.65;
-}
-
-.countdown{
-  display:none;
-  margin-top:12px;
-  color:#6ee7b7;
-  font-size:13px;
-  line-height:1.6;
-  overflow-wrap:anywhere;
-}
-
-.bottom-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  align-items:start;
-  gap:20px;
-}
-
+.stat-label{margin-bottom:12px;color:var(--muted);font-size:13px}
+.stat-value{font-size:25px;line-height:1.3;font-weight:800;overflow-wrap:anywhere}
+.money{color:var(--green)}
+.progress-card{margin-bottom:30px;padding:20px 22px}
+.progress-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;font-weight:600}
+#progressText{color:var(--green);text-align:right}
+.progress{width:100%;height:11px;overflow:hidden;border-radius:999px;background:#20334a}
+.progress-bar{width:0;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--purple),var(--green));transition:width .3s}
+.section-title{margin:0 0 18px;font-size:21px;letter-spacing:-.3px}
+.refresh{display:block;margin:0 0 16px auto;padding:10px 14px;border:1px solid #29445e;border-radius:10px;background:#14263e;color:var(--text);font-weight:600}
+.ads-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:30px}
+.ad-card{min-width:0;padding:20px;border:1px solid #1c4a5b;border-radius:15px;background:linear-gradient(145deg,#0d263b,#091b2d)}
+.ad-icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;margin-bottom:14px;border:1px solid #284a70;border-radius:13px;background:#172d4c;font-size:23px}
+.ad-card h3{margin:0 0 14px;font-size:17px;overflow-wrap:anywhere}
+.ad-info{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}
+.badge{display:inline-block;padding:7px 9px;border:1px solid #293f59;border-radius:8px;background:#172b43;color:#c9d9eb;font-size:12px}
+.badge.reward{color:#6ee7b7;background:#10b9811a;border-color:#10b98140}
+.watch-btn{width:100%;padding:13px 16px;border:0;border-radius:10px;background:linear-gradient(110deg,var(--purple),#4f46e5);color:#fff;font-weight:700}
+.watch-btn:hover,.submit-btn:hover{filter:brightness(1.1)}
+.bottom-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:20px}
 .bottom-grid>.card{min-width:0}
-
 .bottom-grid .section-title{font-size:20px}
-
 .form-group{margin-bottom:17px}
-
-.form-group label{
-  display:block;
-  margin-bottom:8px;
-  color:#c9d8e9;
-  font-size:13px;
-  font-weight:600;
+.form-group label{display:block;margin-bottom:8px;color:#c9d8e9;font-size:13px;font-weight:600}
+.form-group input,.form-group select{
+  display:block;width:100%;min-width:0;min-height:44px;padding:12px 13px;
+  border:1px solid #29465e;border-radius:10px;background:#091a2b;color:var(--text);outline:none
 }
-
-.form-group input,
-.form-group select{
-  display:block;
-  width:100%;
-  min-width:0;
-  min-height:44px;
-  padding:12px 13px;
-  border:1px solid #29465e;
-  border-radius:10px;
-  background:#091a2b;
-  color:var(--text);
-  outline:none;
-}
-
-.form-group input:focus,
-.form-group select:focus{
-  border-color:var(--green);
-  box-shadow:0 0 0 3px rgba(16,185,129,.12);
-}
-
+.form-group input:focus,.form-group select:focus{border-color:var(--green);box-shadow:0 0 0 3px #10b9811f}
 .form-group input::placeholder{color:#7995af}
-
-.submit-btn{
-  width:100%;
-  padding:14px 16px;
-  border:0;
-  border-radius:10px;
-  background:linear-gradient(110deg,var(--green),var(--green-dark));
-  color:white;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.submit-btn:hover{filter:brightness(1.08)}
-
-.submit-btn:disabled{opacity:.65;cursor:not-allowed}
-
-.message{
-  margin-top:14px;
-  font-size:13px;
-  line-height:1.6;
-  overflow-wrap:anywhere;
-}
-
+.submit-btn{width:100%;padding:14px 16px;border:0;border-radius:10px;background:linear-gradient(110deg,var(--green),#07865f);color:#fff;font-weight:700}
+.message{margin-top:14px;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
 .message.success{color:#6ee7b7}
 .message.error{color:#fda4af}
-
-.history-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:16px 0;
-  border-bottom:1px solid #1b354c;
-}
-
+.history-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0;border-bottom:1px solid #1b354c}
 .history-item:last-child{border-bottom:0}
-
-.history-main{
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  gap:7px;
-}
-
-.history-main strong{
-  color:var(--green);
-  font-size:16px;
-}
-
-.history-main small{
-  color:var(--muted);
-  line-height:1.5;
-  overflow-wrap:anywhere;
-}
-
-.status{
-  flex-shrink:0;
-  padding:6px 9px;
-  border:1px solid #334155;
-  border-radius:8px;
-  background:#172b43;
-  color:#dbeafe;
-  font-size:12px;
-}
-
-.status.pending{
-  color:#fcd34d;
-  border-color:#69551d;
-  background:#332b18;
-}
-
-.status.approved{
-  color:#6ee7b7;
-  border-color:#176b54;
-  background:#10372f;
-}
-
-.status.rejected{
-  color:#fda4af;
-  border-color:#773747;
-  background:#3a202b;
-}
-
-.empty{
-  padding:18px;
-  border:1px dashed #29465e;
-  border-radius:12px;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-footer{
-  padding:22px 15px;
-  border-top:1px solid var(--border);
-  color:var(--muted);
-  text-align:center;
-  font-size:12px;
-}
-
-button,input,select{font-family:inherit}
-
-@media(max-width:900px){
-  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ads-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .bottom-grid{grid-template-columns:1fr}
-}
-
+.history-main{min-width:0;display:flex;flex-direction:column;gap:7px}
+.history-main strong{color:var(--green);font-size:16px}
+.history-main small{color:var(--muted);line-height:1.5;overflow-wrap:anywhere}
+.status{flex-shrink:0;padding:6px 9px;border:1px solid #334155;border-radius:8px;background:#172b43;color:#dbeafe;font-size:12px}
+.status.pending{color:#fcd34d;border-color:#69551d;background:#332b18}
+.status.approved{color:#6ee7b7;border-color:#176b54;background:#10372f}
+.status.rejected{color:#fda4af;border-color:#773747;background:#3a202b}
+.empty{padding:18px;border:1px dashed #29465e;border-radius:12px;color:var(--muted);line-height:1.6}
+footer{padding:22px 15px;border-top:1px solid var(--border);color:var(--muted);text-align:center;font-size:12px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ads-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bottom-grid{grid-template-columns:1fr}}
 @media(max-width:560px){
-  header{padding:15px 4%;gap:10px}
-  header h1{font-size:21px}
-  .logout{padding:9px 11px;font-size:12px}
-  .container{width:92%;margin:24px auto}
-  .welcome h2{font-size:25px}
-  .stats{gap:10px}
-  .stats .card{padding:14px}
-  .stat-label{font-size:12px}
-  .stat-value{font-size:21px}
-  .progress-card{padding:16px}
-  .progress-top{align-items:flex-start;flex-direction:column}
-  #progressText{text-align:left}
-  .ads-grid{grid-template-columns:1fr}
-  .ad-card{padding:17px}
-  .bottom-grid{gap:15px}
-  .bottom-grid>.card{padding:17px}
+  header{padding:15px 4%;gap:10px}header h1{font-size:21px}
+  .logout{padding:9px 11px;font-size:12px}.container{width:92%;margin:24px auto}
+  .welcome h2{font-size:25px}.stats{gap:10px}.stats .card{padding:14px}
+  .stat-label{font-size:12px}.stat-value{font-size:21px}
+  .progress-card{padding:16px}.progress-top{align-items:flex-start;flex-direction:column}
+  #progressText{text-align:left}.ads-grid{grid-template-columns:1fr}
+  .ad-card{padding:17px}.bottom-grid{gap:15px}.bottom-grid>.card{padding:17px}
   .history-item{align-items:flex-start}
 }
-
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    scroll-behavior:auto!important;
-    transition:none!important;
-  }
-}
-
-    </style>
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
 </head>
 
 <body>
-
 <header>
-    <h1>Reward <span>Platform</span></h1>
-    <button class="logout" onclick="logout()">Déconnexion</button>
+  <h1>Reward <span>Platform</span></h1>
+  <button class="logout" id="logoutBtn" type="button">Déconnexion</button>
 </header>
 
 <main class="container">
+  <section class="welcome">
+    <h2>Bonjour <span id="userName">...</span> 👋</h2>
+    <p>Découvrez les offres disponibles et gagnez des récompenses après validation.</p>
+  </section>
 
-    <section class="welcome">
-        <h2>Bonjour <span id="userName">...</span> 👋</h2>
-        <p>Regardez les publicités disponibles et gagnez des crédits.</p>
+  <section class="stats">
+    <div class="card"><div class="stat-label">Solde disponible</div><div class="stat-value money" id="balance">0 F CFA</div></div>
+    <div class="card"><div class="stat-label">Événements validés</div><div class="stat-value" id="adsWatched">0</div></div>
+    <div class="card"><div class="stat-label">Total gagné</div><div class="stat-value money" id="totalEarned">0 F CFA</div></div>
+    <div class="card"><div class="stat-label">Total retiré</div><div class="stat-value" id="totalWithdrawn">0 F CFA</div></div>
+  </section>
 
+  <section class="card progress-card">
+    <div class="progress-top">
+      <span>Progression vers le retrait</span>
+      <strong id="progressText">0 / 10 000 F CFA</strong>
+    </div>
+    <div class="progress" role="progressbar" aria-label="Progression vers le retrait" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </section>
 
-    </section>
+  <section>
+    <h2 class="section-title">🎁 Offres et vidéos récompensées</h2>
+    <button class="refresh" id="refreshBtn" type="button">↻ Actualiser</button>
 
-    <section class="stats">
-
-        <div class="card">
-            <div class="stat-label">Solde disponible</div>
-            <div class="stat-value money" id="balance">0 F</div>
+    <div class="ads-grid">
+      <article class="ad-card">
+        <div class="ad-icon">🎮</div>
+        <h3>Offres partenaires</h3>
+        <p style="color:#9bb8d0;line-height:1.6">
+          Découvrez les offres disponibles selon votre pays et votre appareil.
+          Lisez les conditions de chaque offre avant de commencer.
+        </p>
+        <div class="ad-info">
+          <span class="badge reward">500 F CFA par événement validé</span>
         </div>
+        <button class="watch-btn" id="openOfferwallBtn" type="button">Découvrir les offres</button>
+        <p id="offerwallMessage" class="message" aria-live="polite"></p>
+      </article>
+    </div>
+    <p style="color:#9bb8d0;line-height:1.6">
+      Les récompenses sont créditées après confirmation du fournisseur.
+      Le lancement d'une offre ou l'attente d'un délai ne garantit pas un crédit.
+    </p>
+  </section>
 
-        <div class="card">
-            <div class="stat-label">Publicités regardées</div>
-            <div class="stat-value" id="adsWatched">0</div>
+  <section class="bottom-grid">
+    <div class="card">
+      <h2 class="section-title">💸 Demander un retrait</h2>
+      <p style="color:#94a3b8;font-size:14px;margin-bottom:18px">
+        Minimum de retrait : <strong style="color:#fff">10 000 F CFA</strong>
+      </p>
+
+      <form id="withdrawForm">
+        <div class="form-group">
+          <label for="amount">Montant (F CFA)</label>
+          <input id="amount" name="amount" type="number" min="10000" step="1" placeholder="Ex. : 10000" required>
         </div>
-
-        <div class="card">
-            <div class="stat-label">Total gagné</div>
-            <div class="stat-value money" id="totalEarned">0 F</div>
+        <div class="form-group">
+          <label for="method">Méthode de paiement</label>
+          <select id="method" name="method" required>
+            <option value="">Choisir une méthode</option>
+            <option value="Mobile Money">Mobile Money</option>
+            <option value="PayPal">PayPal</option>
+            <option value="Autre">Autre</option>
+          </select>
         </div>
-
-        <div class="card">
-            <div class="stat-label">Total retiré</div>
-            <div class="stat-value" id="totalWithdrawn">0 F</div>
+        <div class="form-group">
+          <label for="account">Compte / numéro</label>
+          <input id="account" name="account" type="text" maxlength="200" autocomplete="off" placeholder="Votre numéro ou compte" required>
         </div>
+        <button class="submit-btn" id="withdrawBtn" type="submit">Demander le retrait</button>
+        <div id="withdrawMessage" class="message" aria-live="polite"></div>
+      </form>
+    </div>
 
-    </section>
-
-    <section class="card progress-card">
-
-        <div class="progress-top">
-            <span>Progression vers le retrait</span>
-            <strong id="progressText">0 / 10 000 F</strong>
-        </div>
-
-        <div class="progress">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-
-    </section>
-
-    <section>
-
-        <h2 class="section-title">📺 Publicités disponibles</h2>
-
-        <button class="refresh" onclick="refreshDashboard()">
-            ↻ Actualiser
-        </button>
-
-        <div class="ads-grid" id="adsList">
-            <div class="card empty">Chargement...</div>
-        </div>
-
-    </section>
-
-    <section class="bottom-grid">
-
-        <div class="card">
-
-            <h2 class="section-title">💸 Demander un retrait</h2>
-
-            <p style="color:#94a3b8;font-size:14px;margin-bottom:18px;">
-                Minimum de retrait : <strong style="color:#fff;">10 000 F CFA</strong>
-            </p>
-
-            <form id="withdrawForm">
-
-                <div class="form-group">
-                    <label for="amount">Montant</label>
-                    <input
-                        id="amount"
-                        type="number"
-                        min="10000"
-                        step="1"
-                        placeholder="Ex : 10000"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="method">Méthode de paiement</label>
-
-                    <select id="method" required>
-                        <option value="">Choisir une méthode</option>
-                        <option value="Mobile Money">Mobile Money</option>
-                        <option value="PayPal">PayPal</option>
-                        <option value="Autre">Autre</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="account">Compte / numéro</label>
-
-                    <input
-                        id="account"
-                        type="text"
-                        placeholder="Ex : votre numéro ou compte"
-                        required
-                    >
-                </div>
-
-                <button class="submit-btn" id="withdrawBtn" type="submit">
-                    Demander le retrait
-                </button>
-
-                <div id="withdrawMessage" class="message"></div>
-
-            </form>
-
-        </div>
-
-        <div class="card history">
-
-            <h2 class="section-title">📋 Mes retraits</h2>
-
-            <div id="withdrawalsList">
-                <div class="empty">Chargement...</div>
-            </div>
-
-        </div>
-
-    </section>
-
+    <div class="card">
+      <h2 class="section-title">📋 Mes retraits</h2>
+      <div id="withdrawalsList"><div class="empty">Chargement...</div></div>
+    </div>
+  </section>
 </main>
 
-<footer>
-    Reward Platform © 2026
-</footer>
-
+<footer>Reward Platform © 2026</footer>
 
 <script>
+"use strict";
 
 const MIN_WITHDRAWAL = 10000;
-
 let currentUser = null;
-let adsCache = [];
-
-
-/* =========================
-   OUTILS
-========================= */
+let isRefreshing = false;
 
 function formatMoney(amount) {
-
-    return Number(amount || 0).toLocaleString("fr-FR") + " F";
+  const value = Number(amount ?? 0);
+  if (!Number.isFinite(value)) return "0 F CFA";
+  return value.toLocaleString("fr-FR", {maximumFractionDigits: 0}) + " F CFA";
 }
-
 
 function escapeHtml(value) {
-
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
-
 
 async function api(url, options = {}) {
+  const headers = {...(options.headers || {})};
+  if (options.body && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
 
-    const response = await fetch(url, {
-        credentials: "same-origin",
-        ...options,
-        headers: {
-            "Content-Type": "application/json",
-            ...(options.headers || {})
-        }
-    });
+  const response = await fetch(url, {
+    credentials: "same-origin",
+    ...options,
+    headers
+  });
 
-    let data = {};
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (_) {}
 
-    try {
-        data = await response.json();
-    } catch {
-        data = {};
-    }
+  if (response.status === 401) {
+    window.location.href = "/";
+    throw new Error("Session expirée. Veuillez vous reconnecter.");
+  }
 
-    if (!response.ok) {
+  if (!response.ok) {
+    throw new Error(data.error || data.message || "Une erreur est survenue.");
+  }
 
-        if (response.status === 401) {
-            window.location.href = "/";
-            return;
-        }
-
-        throw new Error(
-            data.error ||
-            data.message ||
-            "Une erreur est survenue."
-        );
-    }
-
-    return data;
+  return data;
 }
 
-
-/* =========================
-   UTILISATEUR
-========================= */
+function showMessage(element, text, type = "") {
+  element.textContent = text;
+  element.className = "message" + (type ? " " + type : "");
+}
 
 async function loadUser() {
+  const data = await api("/api/me");
+  if (!data || !data.user) {
+    window.location.href = "/";
+    return;
+  }
 
-    const data = await api("/api/me");
-
-    if (!data || !data.user) {
-        window.location.href = "/";
-        return;
-    }
-
-    currentUser = data.user;
-
-    document.getElementById("userName").textContent =
-        currentUser.name || "Utilisateur";
-
-    document.getElementById("balance").textContent =
-        formatMoney(currentUser.balance);
+  currentUser = data.user;
+  document.getElementById("userName").textContent =
+    currentUser.name || "Utilisateur";
+  document.getElementById("balance").textContent =
+    formatMoney(currentUser.balance);
 }
-
-
-/* =========================
-   STATISTIQUES
-========================= */
 
 async function loadStats() {
+  const data = await api("/api/stats");
+  const balance = Number(data.balance || 0);
 
-    const data = await api("/api/stats");
+  document.getElementById("balance").textContent = formatMoney(balance);
+  document.getElementById("adsWatched").textContent =
+    Number(data.adsWatched || 0).toLocaleString("fr-FR");
+  document.getElementById("totalEarned").textContent =
+    formatMoney(data.totalEarned);
+  document.getElementById("totalWithdrawn").textContent =
+    formatMoney(data.totalWithdrawn);
 
-    document.getElementById("balance").textContent =
-        formatMoney(data.balance);
-
-    document.getElementById("adsWatched").textContent =
-        Number(data.adsWatched || 0);
-
-    document.getElementById("totalEarned").textContent =
-        formatMoney(data.totalEarned);
-
-    document.getElementById("totalWithdrawn").textContent =
-        formatMoney(data.totalWithdrawn);
-
-    updateProgress(data.balance);
+  const percentage = Math.max(0, Math.min(100, balance / MIN_WITHDRAWAL * 100));
+  document.getElementById("progressBar").style.width = percentage + "%";
+  document.getElementById("progressText").textContent =
+    formatMoney(balance) + " / " + formatMoney(MIN_WITHDRAWAL);
+  document.getElementById("progressTrack").setAttribute("aria-valuenow", String(Math.round(percentage)));
 }
 
-
-function updateProgress(balance) {
-
-    const percentage =
-        Math.min(
-            100,
-            (Number(balance || 0) / MIN_WITHDRAWAL) * 100
-        );
-
-    document.getElementById("progressBar").style.width =
-        percentage + "%";
-
-    document.getElementById("progressText").textContent =
-        formatMoney(balance) +
-        " / " +
-        formatMoney(MIN_WITHDRAWAL);
+function statusLabel(status) {
+  const labels = {
+    pending: "En attente",
+    approved: "Approuvé",
+    rejected: "Refusé",
+    paid: "Payé",
+    completed: "Payé"
+  };
+  return labels[String(status || "pending").toLowerCase()] || "En traitement";
 }
-
-
-/* =========================
-   PUBLICITÉS
-========================= */
-
-async function loadAds() {
-
-    const container = document.getElementById("adsList");
-
-    try {
-
-        const data = await api("/api/ads");
-
-        adsCache = data.ads || [];
-
-        if (!adsCache.length) {
-
-            container.innerHTML = `
-                <div class="card empty">
-                    Aucune publicité disponible pour le moment.
-                </div>
-            `;
-
-            return;
-        }
-
-        container.innerHTML = adsCache.map(ad => `
-
-            <div class="ad-card" id="ad-${ad.id}">
-
-                <div class="ad-icon">▶️</div>
-
-                <h3>${escapeHtml(ad.title)}</h3>
-
-                <div class="ad-info">
-
-                    <span class="badge">
-                        ⏱ ${Number(ad.duration)} secondes
-                    </span>
-
-                    <span class="badge reward">
-                        +${formatMoney(ad.reward)}
-                    </span>
-
-                </div>
-
-                <button
-                    class="watch-btn"
-                    onclick="startAd(${Number(ad.id)})"
-                    id="watch-${Number(ad.id)}"
-                >
-                    ▶ Regarder
-                </button>
-
-                <div
-                    class="countdown"
-                    id="countdown-${Number(ad.id)}"
-                ></div>
-
-            </div>
-
-        `).join("");
-
-    } catch (error) {
-
-        container.innerHTML = `
-            <div class="card empty">
-                Impossible de charger les publicités.
-            </div>
-        `;
-    }
-}
-
-
-function getAdById(id) {
-
-    return adsCache.find(
-        ad => Number(ad.id) === Number(id)
-    );
-}
-
-
-/* =========================
-   REGARDER UNE PUBLICITÉ
-========================= */
-
-async function startAd(id) {
-
-    const button = document.getElementById(`watch-${id}`);
-    const countdown = document.getElementById(`countdown-${id}`);
-
-    const ad = getAdById(id);
-
-    if (!ad) {
-        alert("Publicité introuvable.");
-        return;
-    }
-
-    button.disabled = true;
-    button.textContent = "Chargement...";
-
-    try {
-
-        const data = await api(`/api/ads/${id}/start`, {
-            method: "POST"
-        });
-
-        const sessionId = data.sessionId;
-
-        countdown.style.display = "block";
-
-        let remaining = Number(ad.duration);
-
-        countdown.textContent =
-            `⏳ Publicité en cours : ${remaining}s`;
-
-        const timer = setInterval(async () => {
-
-            remaining--;
-
-            if (remaining > 0) {
-
-                countdown.textContent =
-                    `⏳ Publicité en cours : ${remaining}s`;
-
-                return;
-            }
-
-            clearInterval(timer);
-
-            countdown.textContent =
-                "⌛ Validation de la publicité...";
-
-            try {
-
-                await completeAd(id, sessionId);
-
-            } catch (error) {
-
-                countdown.textContent =
-                    "❌ " + error.message;
-
-                button.disabled = false;
-                button.textContent = "▶ Regarder";
-            }
-
-        }, 1000);
-
-    } catch (error) {
-
-        button.disabled = false;
-        button.textContent = "▶ Regarder";
-
-        alert(error.message);
-    }
-}
-
-
-async function completeAd(id, sessionId) {
-
-    const button = document.getElementById(`watch-${id}`);
-    const countdown = document.getElementById(`countdown-${id}`);
-
-    try {
-
-        const data = await api(`/api/ads/${id}/view`, {
-            method: "POST",
-            body: JSON.stringify({
-                sessionId
-            })
-        });
-
-        countdown.textContent =
-            `✅ +${formatMoney(data.reward)} ajouté à votre solde`;
-
-        button.textContent = "✓ Publicité validée";
-
-        await loadStats();
-
-        setTimeout(() => {
-
-            countdown.style.display = "none";
-
-            button.disabled = false;
-            button.textContent = "▶ Regarder";
-
-        }, 2500);
-
-    } catch (error) {
-
-        throw error;
-    }
-}
-
-
-/* =========================
-   RETRAIT
-========================= */
-
-document
-    .getElementById("withdrawForm")
-    .addEventListener("submit", async function(event) {
-
-        event.preventDefault();
-
-        const amount =
-            Number(document.getElementById("amount").value);
-
-        const method =
-            document.getElementById("method").value.trim();
-
-        const account =
-            document.getElementById("account").value.trim();
-
-        const button =
-            document.getElementById("withdrawBtn");
-
-        const message =
-            document.getElementById("withdrawMessage");
-
-        message.className = "message";
-        message.textContent = "";
-
-        if (amount < MIN_WITHDRAWAL) {
-
-            message.textContent =
-                `Le retrait minimum est de ${formatMoney(MIN_WITHDRAWAL)}.`;
-
-            message.className = "message error";
-
-            return;
-        }
-
-        if (!method || !account) {
-
-            message.textContent =
-                "Veuillez remplir tous les champs.";
-
-            message.className = "message error";
-
-            return;
-        }
-
-        button.disabled = true;
-        button.textContent = "Envoi...";
-
-        try {
-
-            await api("/api/withdraw", {
-                method: "POST",
-                body: JSON.stringify({
-                    amount,
-                    method,
-                    account
-                })
-            });
-
-            message.textContent =
-                "✅ Demande de retrait envoyée. Elle sera traitée par l'administrateur.";
-
-            message.className = "message success";
-
-            document.getElementById("withdrawForm").reset();
-
-            await loadStats();
-            await loadWithdrawals();
-
-        } catch (error) {
-
-            message.textContent =
-                "❌ " + error.message;
-
-            message.className = "message error";
-
-        } finally {
-
-            button.disabled = false;
-            button.textContent = "Demander le retrait";
-        }
-
-    });
-
-
-/* =========================
-   HISTORIQUE RETRAITS
-========================= */
 
 async function loadWithdrawals() {
+  const container = document.getElementById("withdrawalsList");
 
-    const container =
-        document.getElementById("withdrawalsList");
+  try {
+    const data = await api("/api/withdrawals");
+    const withdrawals = Array.isArray(data.withdrawals) ? data.withdrawals : [];
 
-    try {
-
-        const data = await api("/api/withdrawals");
-
-        const withdrawals = data.withdrawals || [];
-
-        if (!withdrawals.length) {
-
-            container.innerHTML = `
-                <div class="empty">
-                    Aucun retrait demandé.
-                </div>
-            `;
-
-            return;
-        }
-
-        container.innerHTML = withdrawals.map(item => {
-
-            const status =
-                String(item.status || "pending").toLowerCase();
-
-            let statusText = "En attente";
-
-            if (status === "approved") {
-                statusText = "Approuvé";
-            }
-
-            if (status === "rejected") {
-                statusText = "Refusé";
-            }
-
-            return `
-
-                <div class="history-item">
-
-                    <div class="history-main">
-
-                        <strong>
-                            ${formatMoney(item.amount)}
-                        </strong>
-
-                        <small>
-                            ${escapeHtml(item.method)}
-                            •
-                            ${escapeHtml(item.account)}
-                        </small>
-
-                        <br>
-
-                        <small>
-                            ${escapeHtml(item.created_at || "")}
-                        </small>
-
-                    </div>
-
-                    <span class="status ${escapeHtml(status)}">
-                        ${statusText}
-                    </span>
-
-                </div>
-
-            `;
-
-        }).join("");
-
-    } catch (error) {
-
-        container.innerHTML = `
-            <div class="empty">
-                Impossible de charger l'historique.
-            </div>
-        `;
+    if (!withdrawals.length) {
+      container.innerHTML = '<div class="empty">Aucun retrait demandé.</div>';
+      return;
     }
+
+    container.innerHTML = withdrawals.map(item => {
+      const status = String(item.status || "pending").toLowerCase();
+      const safeStatusClass = ["pending", "approved", "rejected"].includes(status) ? status : "";
+      return `
+        <div class="history-item">
+          <div class="history-main">
+            <strong>${escapeHtml(formatMoney(item.amount))}</strong>
+            <small>${escapeHtml(item.method || "")} • ${escapeHtml(item.account || "")}</small>
+            <small>${escapeHtml(item.created_at || "")}</small>
+          </div>
+          <span class="status ${safeStatusClass}">${escapeHtml(statusLabel(status))}</span>
+        </div>`;
+    }).join("");
+  } catch (error) {
+    container.innerHTML = '<div class="empty">Impossible de charger l’historique des retraits.</div>';
+  }
 }
 
+async function openOfferwall() {
+  const button = document.getElementById("openOfferwallBtn");
+  const message = document.getElementById("offerwallMessage");
 
-/* =========================
-   ACTUALISATION
-========================= */
+  button.disabled = true;
+  showMessage(message, "Préparation de l’accès aux offres…");
+
+  try {
+    // Cette route doit être créée côté serveur.
+    // Elle doit exiger une session authentifiée et construire l'URL
+    // à partir de l'identifiant de l'utilisateur connecté.
+    const data = await api("/api/offerwall/url");
+
+    if (!data || typeof data.url !== "string") {
+      throw new Error("Le lien des offres est indisponible.");
+    }
+
+    const url = new URL(data.url);
+
+    if (url.protocol !== "https:" || url.hostname !== "offerwall.gg") {
+      throw new Error("L’adresse du fournisseur n’est pas autorisée.");
+    }
+
+    window.location.assign(url.href);
+  } catch (error) {
+    showMessage(
+      message,
+      error.message || "Impossible d’ouvrir les offres pour le moment.",
+      "error"
+    );
+    button.disabled = false;
+  }
+}
+
+document.getElementById("withdrawForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const amount = Number(document.getElementById("amount").value);
+  const method = document.getElementById("method").value.trim();
+  const account = document.getElementById("account").value.trim();
+  const button = document.getElementById("withdrawBtn");
+  const message = document.getElementById("withdrawMessage");
+
+  showMessage(message, "");
+
+  if (!Number.isSafeInteger(amount) || amount < MIN_WITHDRAWAL) {
+    showMessage(message, "Le retrait minimum est de " + formatMoney(MIN_WITHDRAWAL) + ".", "error");
+    return;
+  }
+
+  if (!method || !account) {
+    showMessage(message, "Veuillez remplir tous les champs.", "error");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Envoi…";
+
+  try {
+    await api("/api/withdraw", {
+      method: "POST",
+      body: JSON.stringify({amount, method, account})
+    });
+
+    showMessage(
+      message,
+      "Demande envoyée. Elle sera traitée par l’administrateur.",
+      "success"
+    );
+
+    this.reset();
+    await Promise.all([loadStats(), loadWithdrawals()]);
+  } catch (error) {
+    showMessage(message, error.message || "Échec de la demande de retrait.", "error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Demander le retrait";
+  }
+});
+
+document.getElementById("openOfferwallBtn").addEventListener("click", openOfferwall);
+
+document.getElementById("refreshBtn").addEventListener("click", refreshDashboard);
+
+document.getElementById("logoutBtn").addEventListener("click", async function() {
+  this.disabled = true;
+  try {
+    await api("/api/logout", {method: "POST"});
+  } catch (_) {
+    // Retour à la page de connexion même si la requête échoue.
+  }
+  window.location.href = "/";
+});
 
 async function refreshDashboard() {
+  if (isRefreshing) return;
+  isRefreshing = true;
 
-    await Promise.all([
-        loadUser(),
-        loadStats(),
-        loadAds(),
-        loadWithdrawals()
-    ]);
+  const button = document.getElementById("refreshBtn");
+  button.disabled = true;
+  button.textContent = "Actualisation…";
+
+  try {
+    await Promise.all([loadUser(), loadStats(), loadWithdrawals()]);
+  } catch (error) {
+    console.error("Actualisation du tableau de bord impossible.");
+  } finally {
+    isRefreshing = false;
+    button.disabled = false;
+    button.textContent = "↻ Actualiser";
+  }
 }
-
-
-/* =========================
-   DECONNEXION
-========================= */
-
-async function logout() {
-
-    try {
-
-        await api("/api/logout", {
-            method: "POST"
-        });
-
-    } catch (error) {
-        // Même en cas d'erreur, retour à la connexion.
-    }
-
-    window.location.href = "/";
-}
-
-
-/* =========================
-   DEMARRAGE
-========================= */
 
 refreshDashboard();
-
 </script>
-
 </body>
 </html>
